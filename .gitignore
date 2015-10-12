@@ -1,0 +1,21 @@
+# OSX Desktop Services store
+.DS_Store
+
+# Gradle files
+.gradle
+
+# Generated files
+bin/
+gen/
+build/
+
+# IntelliJ files
+*.iml
+*.ipr
+*.iws
+.idea/
+local.properties
+
+# Built application files
+*.apk
+*.ap_
