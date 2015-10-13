@@ -3,4 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="search">Search</string>
     <string name="search_hint">Search words</string>
+    <string name="loaded_data">Data loaded</string>
+    <string name="loaded_data_not">Data has not yet being loaded</string>
 </resources>

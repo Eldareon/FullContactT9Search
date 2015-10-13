@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     RecyclerAdapter mAdapter;
 
-    List<String> words = new ArrayList<>();
     Trie trie;
 
     @Override
@@ -62,20 +60,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         },
                         () -> {
                             setRecyclerView();
-                            Toast.makeText(getApplicationContext(), "Data loaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.loaded_data), Toast.LENGTH_SHORT).show();
                         });
     }
 
 
     public List<String> loadWordsToList() {
 
+        List<String> words = new ArrayList<>();
         BufferedReader reader = null;
         try {
             try {
                 InputStream in = getResources().openRawResource(R.raw.words);
                 reader = new BufferedReader(new InputStreamReader(in));
 
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
                     words.add(line);
                 }
@@ -141,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         List<String> filteredWordList = trie.lookup(query);
         if (mAdapter == null)
-            Toast.makeText(getApplicationContext(), "Data has not yet being loaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.loaded_data_not), Toast.LENGTH_SHORT).show();
         else
             mAdapter.animateTo(filteredWordList, query);
         mRecyclerView.scrollToPosition(0);
