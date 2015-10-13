@@ -82,8 +82,7 @@ public class Trie {
         Node current = root;
         for (int i = 0; i < numbers.length(); i++) {
             if (current.next.get(numbers.charAt(i)) == null) {
-                current.words = Collections.emptyList();
-                break;
+                return Collections.emptyList();
             }
             current = current.next.get(numbers.charAt(i));
         }
