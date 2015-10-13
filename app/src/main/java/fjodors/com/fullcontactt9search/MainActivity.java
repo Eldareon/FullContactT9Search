@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -25,6 +27,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -43,21 +46,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         asyncLoadData();
 
     }
 
     public void asyncLoadData() {
-        Observable.just(loadWordsToList())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        words -> {
-                            trie = new Trie();
-                            trie.loadDictionary(words);
-                            setRecyclerView();
-                        }
-                );
+        Observable.create(__ -> {
+            trie = new Trie();
+            trie.loadDictionary(loadWordsToList());
+        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(__ -> {
+                    setRecyclerView();
+                    Toast.makeText(getApplicationContext(), "Data loaded", Toast.LENGTH_LONG).show();
+                });
     }
 
 
