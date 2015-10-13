@@ -16,7 +16,7 @@ public class Trie {
 
     private Node root = new Node();
 
-    Map<Character, Character> t9map = new HashMap<Character, Character>();
+    private Map<Character, Character> t9map = new HashMap<>();
 
     public Trie() {
         t9map.put('a', '2');
@@ -54,8 +54,8 @@ public class Trie {
         private SortedMap<Character, Node> next;
 
         public Node() {
-            next = new TreeMap<Character, Node>();
-            words = new ArrayList<String>();
+            next = new TreeMap<>();
+            words = new ArrayList<>();
         }
 
     }
@@ -89,5 +89,9 @@ public class Trie {
         }
 
         return current.words;
+    }
+
+    public Map getT9Map(){
+        return t9map;
     }
 }

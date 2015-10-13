@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -37,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     RecyclerAdapter mAdapter;
 
-    List<String> words = new ArrayList<String>();
+    List<String> words = new ArrayList<>();
     Trie trie;
 
     @Override
@@ -94,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecyclerAdapter(words);
+        mAdapter = new RecyclerAdapter(trie.getT9Map());
         mRecyclerView.setAdapter(mAdapter);
 
     }
@@ -136,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String query) {
 
         List<String> filteredWordList = trie.lookup(query);
-        mAdapter.animateTo(filteredWordList);
+        mAdapter.animateTo(filteredWordList, query);
         mRecyclerView.scrollToPosition(0);
         return true;
     }

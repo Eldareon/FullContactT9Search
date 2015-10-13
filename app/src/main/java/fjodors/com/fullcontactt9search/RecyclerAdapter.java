@@ -1,13 +1,19 @@
 package fjodors.com.fullcontactt9search;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
+import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,7 +24,9 @@ import butterknife.ButterKnife;
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    List<String> words;
+    private List<String> words;
+    private String searchQuery = "";
+    private Map t9Map;
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -54,10 +62,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-
         ViewHolderWords viewHolderBios = (ViewHolderWords) viewHolder;
-        viewHolderBios.word.setText(words.get(position));
-
+        viewHolderBios.word.setText(highlightText(toNumber(words.get(position)), words.get(position), searchQuery));
     }
 
     @Override
@@ -65,8 +71,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return words.size();
     }
 
-    public RecyclerAdapter(List<String> words) {
-        this.words = words;
+    public RecyclerAdapter(Map t9Map) {
+        this.words = new ArrayList<>();
+        this.t9Map = t9Map;
     }
 
     public String removeItem(int position) {
@@ -86,7 +93,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         notifyItemMoved(fromPosition, toPosition);
     }
 
-    public void animateTo(List<String> words) {
+    public void animateTo(List<String> words, String query) {
+
+        searchQuery = query;
+
         applyAndAnimateRemovals(words);
         applyAndAnimateAdditions(words);
         applyAndAnimateMovedItems(words);
@@ -120,4 +130,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
+    public static CharSequence highlightText(String numberText, String OriginalText, String search) {
+
+        String normalizedText = Normalizer.normalize(numberText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+
+        int start = normalizedText.indexOf(search);
+        if (start < 0) {
+            return numberText;
+        } else {
+            Spannable highlighted = new SpannableString(OriginalText);
+            while (start >= 0) {
+                int spanStart = Math.min(start, numberText.length());
+                int spanEnd = Math.min(start + search.length(), numberText.length());
+
+                highlighted.setSpan(new ForegroundColorSpan(Color.BLUE), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                start = normalizedText.indexOf(search, spanEnd);
+            }
+
+            return highlighted;
+        }
+    }
+
+    public String toNumber(String word) {
+        String numberWord = "";
+
+        for (int i = 0; i < word.length(); i++) {
+            numberWord = numberWord + String.valueOf(t9Map.get(word.charAt(i)));
+        }
+        return numberWord;
+    }
 }
