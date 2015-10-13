@@ -51,14 +51,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void asyncLoadData() {
-        Observable.create(__ -> {
+        Observable.create(subscriber -> {
             trie = new Trie();
             trie.loadDictionary(loadWordsToList());
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(__ -> {
-                    setRecyclerView();
-                    Toast.makeText(getApplicationContext(), "Data loaded", Toast.LENGTH_LONG).show();
-                });
+                        },
+                        __ -> {
+                        },
+                        () -> {
+                            setRecyclerView();
+                            Toast.makeText(getApplicationContext(), "Data loaded", Toast.LENGTH_SHORT).show();
+                        });
     }
 
 
@@ -135,7 +140,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String query) {
 
         List<String> filteredWordList = trie.lookup(query);
-        mAdapter.animateTo(filteredWordList, query);
+        if (mAdapter == null)
+            Toast.makeText(getApplicationContext(), "Data has not yet being loaded", Toast.LENGTH_SHORT).show();
+        else
+            mAdapter.animateTo(filteredWordList, query);
         mRecyclerView.scrollToPosition(0);
         return true;
     }
