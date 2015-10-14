@@ -26,7 +26,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private List<String> words;
     private String searchQuery = "";
-    private Map t9Map;
+    private Map<Character, Character> t9Map;
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

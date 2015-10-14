@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     protected static final String TAG = "MainActivity";
 
     @Bind(R.id.words)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
 
-    RecyclerAdapter mAdapter;
+    RecyclerAdapter recyclerAdapter;
 
     Trie trie;
 
@@ -49,18 +49,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void asyncLoadData() {
-        Observable.create(subscriber -> {
-            trie = new Trie();
-            trie.loadDictionary(loadWordsToList());
-            subscriber.onCompleted();
-        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(__ -> {
-                        },
-                        __ -> {
-                        },
+        Observable.create(
+                subscriber -> {
+                    trie = new Trie();
+                    trie.loadDictionary(loadWordsToList());
+                    subscriber.onCompleted();
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        __ -> {},
+                        e -> e.printStackTrace(),
                         () -> {
                             setRecyclerView();
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.loaded_data), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.loaded_data, Toast.LENGTH_SHORT).show();
                         });
     }
 
@@ -92,13 +94,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
     public void setRecyclerView() {
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecyclerAdapter(trie.getT9Map());
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerAdapter = new RecyclerAdapter(trie.getT9Map());
+        recyclerView.setAdapter(recyclerAdapter);
 
     }
 
@@ -139,11 +141,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String query) {
 
         List<String> filteredWordList = trie.lookup(query);
-        if (mAdapter == null)
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.loaded_data_not), Toast.LENGTH_SHORT).show();
+        if (recyclerAdapter == null)
+            Toast.makeText(getApplicationContext(), R.string.loaded_data_not, Toast.LENGTH_SHORT).show();
         else
-            mAdapter.animateTo(filteredWordList, query);
-        mRecyclerView.scrollToPosition(0);
+            recyclerAdapter.animateTo(filteredWordList, query);
+        recyclerView.scrollToPosition(0);
         return true;
     }
 

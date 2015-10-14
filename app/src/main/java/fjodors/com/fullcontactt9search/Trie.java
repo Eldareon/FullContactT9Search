@@ -1,9 +1,11 @@
 package fjodors.com.fullcontactt9search;
 
 
+import com.google.common.collect.ImmutableMap;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -16,35 +18,38 @@ public class Trie {
 
     private Node root = new Node();
 
-    private Map<Character, Character> t9map = new HashMap<>();
+    private ImmutableMap<Character, Character> t9map;
 
     public Trie() {
-        t9map.put('a', '2');
-        t9map.put('b', '2');
-        t9map.put('c', '2');
-        t9map.put('d', '3');
-        t9map.put('e', '3');
-        t9map.put('f', '3');
-        t9map.put('g', '4');
-        t9map.put('h', '4');
-        t9map.put('i', '4');
-        t9map.put('j', '5');
-        t9map.put('k', '5');
-        t9map.put('l', '5');
-        t9map.put('m', '6');
-        t9map.put('n', '6');
-        t9map.put('o', '6');
-        t9map.put('p', '7');
-        t9map.put('q', '7');
-        t9map.put('r', '7');
-        t9map.put('s', '7');
-        t9map.put('t', '8');
-        t9map.put('u', '8');
-        t9map.put('v', '8');
-        t9map.put('w', '9');
-        t9map.put('x', '9');
-        t9map.put('y', '9');
-        t9map.put('z', '9');
+
+        t9map = ImmutableMap.<Character, Character>builder()
+                .put('a', '2')
+                .put('b', '2')
+                .put('c', '2')
+                .put('d', '3')
+                .put('e', '3')
+                .put('f', '3')
+                .put('g', '4')
+                .put('h', '4')
+                .put('i', '4')
+                .put('j', '5')
+                .put('k', '5')
+                .put('l', '5')
+                .put('m', '6')
+                .put('n', '6')
+                .put('o', '6')
+                .put('p', '7')
+                .put('q', '7')
+                .put('r', '7')
+                .put('s', '7')
+                .put('t', '8')
+                .put('u', '8')
+                .put('v', '8')
+                .put('w', '9')
+                .put('x', '9')
+                .put('y', '9')
+                .put('z', '9')
+                .build();
     }
 
 
@@ -90,7 +95,7 @@ public class Trie {
         return current.words;
     }
 
-    public Map getT9Map(){
+    public Map getT9Map() {
         return t9map;
     }
 }
