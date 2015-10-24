@@ -30,14 +30,12 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    protected static final String TAG = "MainActivity";
-
     @Bind(R.id.words)
     RecyclerView recyclerView;
 
-    RecyclerAdapter recyclerAdapter;
+    final private RecyclerAdapter recyclerAdapter = new RecyclerAdapter();
 
-    Trie trie;
+    final private Trie trie = new Trie();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void asyncLoadData() {
         Observable.create(
                 subscriber -> {
-                    trie = new Trie();
                     trie.loadDictionary(loadWordsToList());
                     subscriber.onCompleted();
                 })
@@ -95,23 +92,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     public void setRecyclerView() {
         recyclerView.setHasFixedSize(true);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-
-        recyclerAdapter = new RecyclerAdapter(trie.getT9Map());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(recyclerAdapter);
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         setupSearchView(menu);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -124,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         SearchableInfo searchInfo = searchManager.getSearchableInfo(name);
 
         searchView.setSearchableInfo(searchInfo);
-
         searchView.setOnQueryTextListener(this);
     }
 
@@ -141,10 +129,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String query) {
 
         List<String> filteredWordList = trie.lookup(query);
-        if (recyclerAdapter == null)
-            Toast.makeText(getApplicationContext(), R.string.loaded_data_not, Toast.LENGTH_SHORT).show();
-        else
-            recyclerAdapter.animateTo(filteredWordList, query);
+        recyclerAdapter.setWordsAndQuery(filteredWordList, query);
         recyclerView.scrollToPosition(0);
         return true;
     }
