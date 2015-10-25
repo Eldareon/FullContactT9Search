@@ -1,14 +1,8 @@
 package fjodors.com.fullcontactt9search;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.view.ViewGroup;
 
-import java.text.Normalizer;
 import java.util.List;
 
 import lombok.Getter;

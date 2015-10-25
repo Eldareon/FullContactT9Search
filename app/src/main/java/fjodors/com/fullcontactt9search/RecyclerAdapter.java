@@ -1,7 +1,6 @@
 package fjodors.com.fullcontactt9search;
 
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spannable;
 import android.text.SpannableString;
