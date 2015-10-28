@@ -1,6 +1,8 @@
 package fjodors.com.fullcontactt9search;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -8,6 +10,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import java.text.Normalizer;
@@ -22,12 +26,15 @@ import butterknife.ButterKnife;
  * Created by Fjodors on 2015.05.10..
  */
 
-public class RecyclerAdapter extends AnimatedRecyclerAdapter<String> {
+public class RecyclerAdapter extends  RecyclerView.Adapter<ViewHolder> {
 
     private String searchQuery = "";
+    private int lastPosition = -1;
+    private  List<String> items;
+
 
     public RecyclerAdapter() {
-        super(new ArrayList<>());
+        items = new ArrayList<>();
     }
 
     public class ViewHolderWords extends ViewHolder {
@@ -50,19 +57,20 @@ public class RecyclerAdapter extends AnimatedRecyclerAdapter<String> {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        ViewHolderWords viewHolderBios = (ViewHolderWords) viewHolder;
-        String word = getItems().get(position);
-        viewHolderBios.word.setText(highlightText(toNumber(word), word, searchQuery));
+        ViewHolderWords viewHolderWords = (ViewHolderWords) viewHolder;
+        String word = items.get(position);
+        viewHolderWords.word.setText(highlightText(toNumber(word), word, searchQuery));
     }
+
 
     @Override
     public int getItemCount() {
-        return getItems().size();
+        return items.size();
     }
 
     public void setWordsAndQuery(List<String> words, String query) {
         searchQuery = query;
-        animateTo(words);
+        items = words;
     }
 
     public static CharSequence highlightText(String numberText, String OriginalText, String search) {

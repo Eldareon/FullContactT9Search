@@ -1,11 +1,17 @@
 package fjodors.com.fullcontactt9search;
 
 
+import android.util.Log;
+
 import com.google.common.collect.ImmutableMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -76,6 +82,9 @@ public class Trie {
 
     public List<String> lookup(String numbers) {
 
+        if(numbers.length() <= 0)
+            return Collections.emptyList();
+
         Node current = root;
         for (int i = 0; i < numbers.length(); i++) {
             if (current.next.get(numbers.charAt(i)) == null) {
@@ -84,7 +93,31 @@ public class Trie {
             current = current.next.get(numbers.charAt(i));
         }
 
-        return current.words;
+        return bfs_search(current);
     }
 
+    public List<String> bfs_search(Node currentRoot) {
+
+        Queue<Node> q = new LinkedList<Node>();
+        List<String> words = new ArrayList<String>();
+        q.add(currentRoot);
+
+        while (!q.isEmpty()) {
+            Node tempNode = q.remove();
+            if (tempNode.words != null && tempNode.words.size() > 0) {
+                for (String word : tempNode.words) {
+                    words.add(word);
+                }
+            }
+
+            if (tempNode.next != null) {
+                Iterator it = tempNode.next.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
+                    q.add((Node) pair.getValue());
+                }
+            }
+        }
+        return words;
+    }
 }

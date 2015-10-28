@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         List<String> filteredWordList = trie.lookup(query);
         recyclerAdapter.setWordsAndQuery(filteredWordList, query);
+        recyclerAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(0);
         return true;
     }
