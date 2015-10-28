@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 public class RecyclerAdapter extends  RecyclerView.Adapter<ViewHolder> {
 
     private String searchQuery = "";
-    private int lastPosition = -1;
     private  List<String> items;
 
 
